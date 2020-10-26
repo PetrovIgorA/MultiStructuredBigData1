@@ -1,0 +1,7 @@
+# Localhost files
+__pycache__
+.vscode
+HW1.pdf
+
+# Debug files
+debug.txt
