@@ -194,7 +194,8 @@ class KMeansMRJob(MRJob):
             while not self.one_step(step, is_debug):
                 step += 1
 
-        # Calculate steps_count steps
+        # Calculate max_steps_count steps
+        # or until all new centers are not changed
         if max_steps_count > 0:
             # Main loop
             while step < max_steps_count and not self.one_step(step, is_debug):
