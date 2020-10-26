@@ -1,6 +1,6 @@
 # K-Means for MapReduce
 
-Course: Managing multi-structured big data
+Course: Managing multi-structured big data  
 Lector: Bryuhov D. O.
 
 ### Run
