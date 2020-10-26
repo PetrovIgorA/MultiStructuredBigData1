@@ -16,6 +16,7 @@ def debug(*args, debug_filename=DEFAULT_DEBUG_PATH, sep=' ', end='\n'):
     """
     print()-like function for debugging
     """
+
     with open(debug_filename, 'a') as file:
         for arg in args:
             file.write(str(arg) + sep)
@@ -30,16 +31,19 @@ def distance(point_1: list, point_2: list, metric='manhattan'):
     if metric == 'manhattan':
         return functools.reduce(lambda x, y: x + y, map(lambda x, y: abs(x - y), point_1, point_2))
     elif metric == 'euclid':
-        return functools.reduce(lambda x, y: x + y, map(lambda x, y: (x - y) ** 2, point_1, point_2))
+        return math.sqrt(functools.reduce(lambda x, y: x + y, map(lambda x, y: (x - y) ** 2, point_1, point_2)))
     elif metric == 'chebyshev':
         return functools.reduce(max, map(lambda x, y: abs(x - y), point_1, point_2))
     else:
         raise ValueError("Incorrect metric")
 
-# override decorator
+# Decorator for override
 def override(super_class):
     def overrider(method):
-        assert(method.__name__ in dir(super_class))
+        is_in_super_class = method.__name__ in dir(super_class)
+        if not is_in_super_class:
+            print("Super class has not method \'" + method.__name__ + '\'')
+            assert(is_in_super_class)
         return method
     return overrider
 
@@ -136,6 +140,7 @@ class KMeansMRJob(MRJob):
         # Reducer output
         yield class_id, mean_point
 
+    # Debug centers printing
     def debug(self, is_debug: bool, step: int):
         """
         Print intermediate results into debug file
@@ -145,6 +150,7 @@ class KMeansMRJob(MRJob):
             debug("OLD", step, self.get_centers(self.__OLD_CENTERS_PATH))
             debug("NEW", step, self.get_centers(self.__NEW_CENTERS_PATH), end='\n\n')
     
+    # One MapReduce running
     def one_step(self, step: int, is_debug: bool):
         """
         One step in main MapReduce loop.
@@ -165,6 +171,7 @@ class KMeansMRJob(MRJob):
 
         return is_end
 
+    # Main function for this class
     def full_run(self, max_steps_count=0, start_centers_path=DEFAULT_CENTERS_PATH, is_debug=False):
         """
         Full running with several steps
